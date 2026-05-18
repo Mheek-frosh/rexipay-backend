@@ -1,0 +1,43 @@
+﻿go : controllers\user_co
+ntroller.go:9:2: no 
+required module 
+provides package github.
+com/gin-gonic/gin; to 
+add it:
+At line:1 char:1
++ go build 2> 
+build_error.txt
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (controllers\use.   
+ ..gin; to add it::S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+	go get 
+github.com/gin-gonic/gin
+controllers\user_control
+ler.go:10:2: no 
+required module 
+provides package github.
+com/golang-jwt/jwt/v5; 
+to add it:
+	go get github.com/golan
+g-jwt/jwt/v5
+controllers\user_control
+ler.go:11:2: missing 
+go.sum entry for module 
+providing package golang
+.org/x/crypto/bcrypt 
+(imported by github.com/
+Mheek-frosh/rexipay-back
+end/controllers); to 
+add:
+	go get github.com/Mheek
+-frosh/rexipay-backend/c
+ontrollers
