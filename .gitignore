@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# Go Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Specific to this project
+temp_build.exe
+rexipaybackend.exe
+
+# Text editor / OS files
+.DS_Store
+.vscode/

@@ -10,11 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// DepositInput defines the expected JSON payload for making a deposit
 type DepositInput struct {
 	Amount     float64 `json:"amount" binding:"required,gt=0"`
 	WalletType string  `json:"wallet_type" binding:"required,oneof=fiat crypto"`
 }
 
+// Deposit handles the logic for crediting a user's wallet.
+// It finds the target wallet, begins a database transaction to ensure data integrity,
+// updates the balance, creates a transaction record, and sends a notification.
 func Deposit(c *gin.Context) {
 	var input DepositInput
 	if err := c.ShouldBindJSON(&input); err != nil {
