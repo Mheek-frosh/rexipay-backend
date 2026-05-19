@@ -9,16 +9,14 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	// Health check / Welcome route
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status":  "success",
-			"message": "Welcome to RexiPay API! The server is running perfectly.",
-		})
-	})
 
-	// Public routes
-	auth := r.Group("/auth")
+	// API Versioning (IMPORTANT 🔥)
+	api := r.Group("/api/v1")
+
+	// ========================
+	// PUBLIC ROUTES
+	// ========================
+	auth := api.Group("/auth")
 	{
 		auth.POST("/send-otp", controllers.SendOTP)
 		auth.POST("/resend-otp", controllers.ResendOTP)
@@ -27,17 +25,21 @@ func SetupRoutes(r *gin.Engine) {
 		auth.POST("/login", controllers.Login)
 	}
 
-	// Protected routes
-	protected := r.Group("/api")
+	// ========================
+	// PROTECTED ROUTES
+	// ========================
+	protected := api.Group("/")
 	protected.Use(middleware.AuthMiddleware())
 	{
 		protected.GET("/profile", func(c *gin.Context) {
 			userID, _ := c.Get("user_id")
+
 			var user models.User
 			if err := config.DB.Preload("Wallets").First(&user, userID).Error; err != nil {
 				c.JSON(404, gin.H{"error": "User not found"})
 				return
 			}
+
 			c.JSON(200, user)
 		})
 
@@ -50,7 +52,7 @@ func SetupRoutes(r *gin.Engine) {
 		protected.POST("/wallets/lookup", controllers.LookupAccount)
 		protected.POST("/wallets/transfer", controllers.TransferFunds)
 
-		// New Features
+		// Extra features
 		protected.GET("/banks", controllers.GetBanks)
 		protected.POST("/beneficiaries", controllers.AddBeneficiary)
 		protected.GET("/beneficiaries", controllers.GetBeneficiaries)
@@ -59,4 +61,13 @@ func SetupRoutes(r *gin.Engine) {
 		protected.GET("/notifications", controllers.GetNotifications)
 		protected.GET("/login-history", controllers.GetLoginHistory)
 	}
+
+	// ========================
+	// TEST ROUTE (VERY USEFUL)
+	// ========================
+	api.GET("/test", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "API v1 working ✅",
+		})
+	})
 }
